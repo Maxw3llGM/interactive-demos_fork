@@ -3,7 +3,12 @@ const WEBAUDIO_MAX_SAMPLERATE = 96000;
 const NUM_COLUMNS = 2;
 const soundTimeSeconds = .5;
 const MAX_HARMONICS = 20;
-function new_widget(panels, sliders) { const sketch = p => {
+function new_widget(panels, sliders, elem_id) { const sketch = p => {
+
+var element = undefined;
+if (elem_id) {
+  element = document.getElementById(elem_id);
+}
 
 var numPanels = panels.length;
 var numSliders = sliders.length;
@@ -44,7 +49,8 @@ var settings =
     };
 
 p.setup = function () {
-  p.createCanvas(p.windowWidth, p.windowHeight);
+  let canvas = p.createCanvas(p.windowWidth, p.windowHeight);
+  if (element) canvas.parent(element);
   p.textAlign(p.CENTER);
   panels.forEach(panel => panel.setup(p, panelHeight, panelWidth, settings));
   sliders.forEach(slider => slider.setup(p, settings));
@@ -69,8 +75,15 @@ p.draw = function() {
 };
 
 p.windowResized = function() {
-  let w = p.windowWidth - 20; // TODO: get panel bezel somehow instead of hardcoded 20
-  let h = p.windowHeight - 20;
+  let w, h;
+  if (element) {
+    w = element.offsetWidth - 20;
+    h = element.offsetHeight - 20;
+  }
+  else {
+    w = p.windowWidth - 20;
+    h = p.windowHeight - 20;
+  }
   resize(w, h);
   p.resizeCanvas(w, h);
   panels.forEach(panel => panel.resize(panelHeight, panelWidth));
@@ -92,17 +105,20 @@ p.windowResized = function() {
 function resize(w, h) {
   if (w < 800) numColumns = 1;
   else numColumns = 2;
-  let panelRows = Math.ceil((numPanels+1)/numColumns);
+  let panelRows = Math.ceil((numPanels+1)/numColumns) + 1; // + 1 because a panelHeight is for sliders
   let sliderRows = Math.ceil((numSliders+1)/numColumns);
   panelWidth   = w / numColumns;
   sliderWidth  = w / numColumns;
-  panelHeight  = h / panelRows;
+  panelHeight  = h / panelRows; 
   sliderHeight = panelHeight / sliderRows;
+  let sliderPanelHeight = panelHeight;
+  console.log(h, panelHeight * panelRows + sliderPanelHeight);
   if (sliderHeight < 30) { // keep sliders from getting squished
     sliderHeight = 30;
-    let sliderPanelHeight = sliderHeight * sliderRows;
+    sliderPanelHeight = sliderHeight * sliderRows;
     panelHeight = (h - sliderPanelHeight) / (panelRows - 1);
   }
+  console.log(h, panelHeight * panelRows + sliderPanelHeight);
 }
 
 function buttonSetup() {

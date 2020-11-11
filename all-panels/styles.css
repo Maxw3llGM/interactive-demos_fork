@@ -1,8 +1,9 @@
-canvas {
-  width: 100% !important;
-  height: 100% !important;
+#widget {
+  width: 100vw !important;
+  height: 90vh !important;
   text-align: center;
 }
+
 sup { vertical-align: top; position: relative; top: -0.5em; }
 
 p{

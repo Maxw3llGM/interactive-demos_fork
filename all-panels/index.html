@@ -11,7 +11,7 @@
   </head>
   <body>
     <main>
-      <div>
+      <div id="widget">
     <script>
         const widget = new_widget(
                 [ new inputSigPanel()
@@ -25,6 +25,7 @@
                 , new reconstructedSigPanel()
                 , new sampledSigFFTPanel()
                 , new inputPlusSampledPanel()
+                , new sampledSigFFTPanel()
                 , new allSignalsPanel()
                 ],
                 [ new freqSlider()
@@ -39,6 +40,7 @@
                 , new timeZoomSlider()
                 , new freqZoomSlider()
                 ]
+                , "widget"
         );
         </script>
       </div>
