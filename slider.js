@@ -67,7 +67,7 @@ class freqSlider extends slider{
     this.propName = "fundFreq";
     this.min = 0;
     this.max = this.settings.sampleRate / 4 ;
-    this.initial = 100;
+    this.initial = 440;
     this.step = 1.0;
     this.displayVal = this.initial;
     this.makeSlider(p);
@@ -94,6 +94,7 @@ class numHarmSlider extends slider{
 
     this.slopeSel = p.createSelect();
     this.slopeSel.option("1/x");
+    this.slopeSel.option("1/x2");
     this.slopeSel.option("lin");
     this.slopeSel.option("flat");
     this.slopeSel.selected(this.settings.harmSlope);
@@ -239,19 +240,21 @@ class ampZoomSlider extends zoomSlider{
     this.settings = settings;
     this.name ="Amp. Zoom (%)";
     this.propName="ampZoom";
-    this.min = .25;
+    this.min = .1;
     this.max = 4.0;
     this.initial =1.0;
     this.step = .01;
     this.makeSlider(p);
 }
 }
+
+const minTimeZoom = .25;
 class timeZoomSlider extends zoomSlider{
   setup(p,settings){
     this.settings = settings;
     this.propName ="timeZoom";
     this.name = "Time zoom (%)"
-    this.min = .25;
+    this.min = minTimeZoom;
     this.max =  3;
     this.initial = 1.0;
     this.step = .01;
@@ -259,11 +262,13 @@ class timeZoomSlider extends zoomSlider{
 }
 
 }
+
+const minFreqZoom = 0.5;
 class freqZoomSlider extends zoomSlider{
   setup(p,settings){
     this.settings = settings;
     this.propName ="freqZoom";
-    this.min = .5;
+    this.min = minFreqZoom;
     this.max =  3;
     this.initial = 1.0;
     this.step = .01;

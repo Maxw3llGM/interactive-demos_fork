@@ -1,18 +1,19 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <link rel="stylesheet" type="text/css" href="styles.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="../styles.css" media="screen" />
     <script src="https://cdn.jsdelivr.net/npm/p5@1.1.9/lib/p5.js"></script>
     <script src="../fili.min.js"></script>
     <script src="../panel.js"></script>
     <script src="../slider.js"></script>
     <script src="../fft.js"></script>
+    <script src="../waves.js"></script>
     <script src="../widget.js"></script>
   </head>
   <body>
     <main>
-      <div id="widget">
-    <script>
+      <div id="widget"></div>
+      <script>
         const widget = new_widget(
                 [ new inputSigPanel()
                 , new inputSigFreqPanel()
@@ -37,19 +38,18 @@
                 , new amplitudeSlider()
                 , new phaseSlider()
                 , new ampZoomSlider()
-                , new timeZoomSlider()
                 , new freqZoomSlider()
+                , new timeZoomSlider()
                 ]
                 , "widget"
         );
-        </script>
-      </div>
-        </main>
-        <footer>
-          <div>Digital Audio Workbench </div>
-          <div>By Josh Rohs, Travis West & Marcelo M. Wanderley </div>
-          <div>with contributions by Eduardo Meneses, Christian Frisson, and Erivan Duarte</div>
-          <div>Copyright <a href="//www-new.idmil.org/">IDMIL</a>/McGill University, 2020 </div>
-          </footer>
-      </body>
-    </html>
+      </script>
+    </main>
+    <footer>
+      <div>Digital Audio Workbench </div>
+      <div>By Josh Rohs, Travis J. West & Marcelo M. Wanderley </div>
+      <div>with contributions by Eduardo Meneses, Christian Frisson, and Erivan Duarte</div>
+      <div>Copyright <a href="//www-new.idmil.org/">IDMIL</a>/McGill University, 2020 </div>
+    </footer>
+  </body>
+</html>
