@@ -24,7 +24,7 @@ var settings =
     , fundFreq : 1250 // input signal fundamental freq
     , sampleRate : WEBAUDIO_MAX_SAMPLERATE
     , downsamplingFactor : 2
-    , numHarm : 2 //Number of harmonics
+    , numHarm : 1 //Number of harmonics
     , harmType : "Odd" // Harmonic series to evaluate - Odd, even or all
     , harmSlope : "1/x" // Amplitude scaling for harmonics. can be used to create different shapes like saw or square
     , harmonicFreqs : new Float32Array(MAX_HARMONICS) //Array storing harmonic frequency in hz

@@ -146,7 +146,7 @@ class sampleRateSlider extends slider{
     this.name ="Sample Rate";
     this.unit = "Hz";
     this.propName="downsamplingFactor";
-    this.min = p.log(3000)/p.log(2);
+    this.min = p.log(500)/p.log(2);
     this.max =  p.log(48000)/p.log(2);
     this.initial = p.log(48000)/p.log(2);
     this.step = 0.1
@@ -276,6 +276,7 @@ const minFreqZoom = 0.5;
 class freqZoomSlider extends zoomSlider{
   setup(p,settings){
     this.settings = settings;
+    this.name = "Frequency zoom (%)";
     this.propName ="freqZoom";
     this.min = minFreqZoom;
     this.max =  3;
