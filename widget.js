@@ -2,16 +2,17 @@ const BIT_DEPTH_MAX = 16;
 const WEBAUDIO_MAX_SAMPLERATE = 96000;
 const NUM_COLUMNS = 2;
 const MAX_HARMONICS = 20;
-function new_widget(panels, sliders, elem_id) { const sketch = p => {
+function new_widget(panels, sliders, elem_id, width_factor=1.0, height_factor=1.0) { const sketch = p => {
 
 var element = undefined;
 if (elem_id) {
   element = document.getElementById(elem_id);
 }
 
+var canvas;
 var numPanels = panels.length;
 var numSliders = sliders.length;
-let panelHeight, panelWidth, sliderWidth, sliderHeight, numColumns;
+let panelHeight, panelWidth, sliderWidth, sliderHeight, numColumns, widgetHeight, widgetWidth;
 resize(1080, 1920);
 
 // set display and fftSize to ensure there is enough data to fill the panels when zoomed all the way out
@@ -52,7 +53,7 @@ var settings =
     };
 
 p.setup = function () {
-  let canvas = p.createCanvas(p.windowWidth, p.windowHeight);
+  canvas = p.createCanvas(p.windowWidth, p.windowHeight);
   if (element) canvas.parent(element);
   p.textAlign(p.CENTER);
   panels.forEach(panel => panel.setup(p, panelHeight, panelWidth, settings));
@@ -79,49 +80,43 @@ p.draw = function() {
 
 p.windowResized = function() {
   let w, h;
-  if (element) {
-    w = element.offsetWidth - 20;
-    h = element.offsetHeight - 20;
-  }
-  else {
-    w = p.windowWidth - 20;
-    h = p.windowHeight - 20;
-  }
+  w = width_factor * p.windowWidth - 20;
+  h = height_factor * p.windowHeight - 20;
   resize(w, h);
-  p.resizeCanvas(w, h);
+  p.resizeCanvas(widgetWidth, widgetHeight);
   panels.forEach(panel => panel.resize(panelHeight, panelWidth));
 
-  let yoffset = panelHeight * p.ceil(numPanels/numColumns) + 20;
+  let yoffset = canvas.position().y + panelHeight * p.ceil(numPanels/numColumns) + 20;
+  let xoffset = canvas.position().x;
   sliders.forEach( (slider, index) => {
     let y = yoffset + p.floor(index / numColumns) * sliderHeight;
-    let x = p.floor(index % numColumns) * panelWidth;
+    let x = xoffset + p.floor(index % numColumns) * panelWidth;
     slider.resize(x + 20, y, sliderWidth,p);
   });
 
   let y = yoffset + p.floor((numSliders)/ numColumns) * sliderHeight;
-  let x = p.floor((numSliders) % numColumns) * panelWidth;
+  let x = xoffset + p.floor((numSliders) % numColumns) * panelWidth;
+  let buttonWidth = (Math.round((sliderWidth - 20) / 3) - 20).toString() + "px";
   originalButton.position(x + 20, y);
-  reconstructedButton.position(originalButton.x + originalButton.width * 1.1, originalButton.y);
-  quantNoiseButton.position(reconstructedButton.x + reconstructedButton.width * 1.1, reconstructedButton.y);
+  originalButton.style('width', buttonWidth);
+  reconstructedButton.position(originalButton.x + originalButton.width + 20 , originalButton.y);
+  reconstructedButton.style('width', buttonWidth);
+  quantNoiseButton.position(reconstructedButton.x + reconstructedButton.width + 20, reconstructedButton.y);
+  quantNoiseButton.style('width', buttonWidth);
 };
 
 function resize(w, h) {
-  if (w < 800) numColumns = 1;
+  if (numPanels == 1 || w < 800) numColumns = 1;
   else numColumns = 2;
-  let panelRows = Math.ceil((numPanels+1)/numColumns) + 1; // + 1 because a panelHeight is for sliders
-  let sliderRows = Math.ceil((numSliders+1)/numColumns);
-  panelWidth   = w / numColumns;
-  sliderWidth  = w / numColumns;
-  panelHeight  = h / panelRows; 
-  sliderHeight = panelHeight / sliderRows;
-  let sliderPanelHeight = panelHeight;
-  console.log(h, panelHeight * panelRows + sliderPanelHeight);
-  if (sliderHeight < 30) { // keep sliders from getting squished
-    sliderHeight = 30;
-    sliderPanelHeight = sliderHeight * sliderRows;
-    panelHeight = (h - sliderPanelHeight) / (panelRows - 1);
-  }
-  console.log(h, panelHeight * panelRows + sliderPanelHeight);
+  let panelRows = Math.ceil(numPanels/numColumns) + 1; // + 1 because a panelHeight is for sliders
+  let sliderRows = Math.ceil((numSliders+1)/numColumns); // + 1 for the buttons
+  panelWidth   = p.constrain(w / numColumns, 400, 1920);
+  sliderWidth  = panelWidth;
+  panelHeight  = p.constrain(h / panelRows, 100, 1080); 
+  sliderHeight = p.constrain(panelHeight / sliderRows, 30, 80);
+
+  widgetHeight = panelHeight * (panelRows-1) + sliderHeight * (sliderRows + 1);
+  widgetWidth = panelWidth * numColumns;
 }
 
 function buttonSetup() {
@@ -134,14 +129,14 @@ function buttonSetup() {
     playWave(settings.original_pb, WEBAUDIO_MAX_SAMPLERATE, settings.snd);
   });
 
-  reconstructedButton = p.createButton("play reconstructed");
+  reconstructedButton = p.createButton("reconstructed");
   reconstructedButton.position(originalButton.x + originalButton.width * 1.1, originalButton.y);
   reconstructedButton.mousePressed( () => {
     renderWaves(true);
     if (!settings.snd) settings.snd = new (window.AudioContext || window.webkitAudioContext)();
     playWave(settings.reconstructed_pb, WEBAUDIO_MAX_SAMPLERATE, settings.snd);
   });
-  quantNoiseButton = p.createButton("play quantization noise");
+  quantNoiseButton = p.createButton("quantiz. noise");
   quantNoiseButton.position(reconstructedButton.x + reconstructedButton.width * 1.1, reconstructedButton.y);
   quantNoiseButton.mousePressed( () => {
     renderWaves(true);

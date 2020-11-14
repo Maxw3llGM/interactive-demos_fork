@@ -1,3 +1,14 @@
+#widget {
+    margin-left: calc(50% - 50vw);
+    width: 100vw;
+}
+
+.p5Canvas {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 body {
   font-family: Cantarell, sans-serif;
   font-size: 1.2rem;
@@ -7,12 +18,6 @@ body {
   padding-bottom: min(3em,5%);
   padding-left: min(3em,5%);
   padding-right: min(3em,5%);
-}
-
-canvas {
-  width: 100% !important;
-  height: 100% !important;
-  text-align: center;
 }
 
 sup { vertical-align: top; position: relative; top: -0.5em; }

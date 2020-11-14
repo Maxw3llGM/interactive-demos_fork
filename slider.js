@@ -7,11 +7,17 @@ class slider{
   setup(p, settings){
     // should be overridden to set up the slider
   }
+
+  propertyValue(){
+    // override with any calculations to derive the property value from the slider value
+    return this.slider.value();
+  }
+
   updateValue(p){
-  this.settings[this.propName] = this.slider.value();
-  this.displayVal = this.calcDisplayVal();
-  this.textBox.value(this.displayVal);
-  this.textLabel.html(this.name+': ');
+    this.settings[this.propName] = this.propertyValue();
+    this.displayVal = this.calcDisplayVal();
+    this.textBox.value(this.displayVal);
+    this.textLabel.html(this.name+': ');
   }
 
   makeSlider(p){
@@ -29,33 +35,50 @@ class slider{
   }
 
   resize(x, y, w, p){
-    let width = w - 20;
-    let labelWidth = 250;
+    this.width = w;
+    let width = w - 40;
+    let labelWidth = this.smallWidth() ? 10 : 200;
     width -= labelWidth;
     let sliderWidth = width * 0.6;
     width -= sliderWidth;
-    let textboxWidth = width * 0.5;
+    let textboxWidth = width * 0.6;
     width -= textboxWidth;
     let buttonWidth = width;
 
     this.slider.style('width', Math.round(sliderWidth).toString() + "px");
     this.slider.position(x, y);
     this.textLabel.position(x + this.slider.width + 10, y - 15);
+    if (this.smallWidth()) this.textLabel.hide();
+    else this.textLabel.show();
     this.textBox.position(x+this.slider.width + labelWidth,y);
     this.textBox.style('width', Math.round(textboxWidth).toString() + "px");
     this.button.position(this.textBox.x+this.textBox.width+5,y);
     this.button.style('width', Math.round(buttonWidth).toString() + "px");
   }
+
+  smallWidth(){
+    return this.width < 600;
+  }
+
   buttonPressed(){
     this.slider.value(this.calcSliderVal());  }
 
   calcSliderVal(){
     // override this with any calculations needed to convert textbox val to slider val (%, etc)
-    return this.textBox.value();
+    // TODO: we could provide more robust parsing to extract a number from the input here...
+    let text = this.textBox.value();
+    let word_boundary = text.indexOf(" ");
+    if (word_boundary != -1) text = text.substr(0, word_boundary);
+    return text;
   }
+
+  displayValSuffix(){
+    return this.smallWidth() ? " " + this.propName : "";
+  }
+
   calcDisplayVal(){
     // override this with any calculations needed to convert stored variable to display val (%, etc)
-    return this.settings[this.propName];
+    return this.settings[this.propName] + this.displayValSuffix();
   }
 }
 
@@ -63,7 +86,8 @@ class slider{
 class freqSlider extends slider{
   setup(p,settings){
     this.settings = settings;
-    this.name ="Frequency (Hz)";
+    this.name = "Frequency";
+    this.unit = "Hz";
     this.propName = "fundFreq";
     this.min = 0;
     this.max = this.settings.sampleRate / 4 ;
@@ -79,6 +103,7 @@ class numHarmSlider extends slider{
   setup(p,settings){
     this.settings = settings;
     this.name ="Number of harmonics";
+    this.unit = "";
     this.propName="numHarm"
     this.min = 1;
     this.max = 20;
@@ -102,37 +127,24 @@ class numHarmSlider extends slider{
 
     this.makeSlider(p);
   }
-  resize(x, y, w, p){
 
-    let width = w - 20;
-    let labelWidth = 250;
-    width -= labelWidth;
-    let sliderWidth = width * 0.5; // slider + dropdowns
-    width -= sliderWidth;
-    let dropDownWidth = sliderWidth * .25-10; // Make slider + dropdown the same width as other sliders.
-    sliderWidth = sliderWidth * .75; // Slider
-    let textboxWidth = width * 0.42;
-    let buttonWidth = width*.4;
-
-    this.slider.style('width', Math.round(sliderWidth).toString() + "px");
-    this.slider.position(x, y);
-    this.oddEvenSel.style('width', Math.round(dropDownWidth).toString() + "px");
+  resize(x, y, w, p) {
+    super.resize(x, y, w, p);
+    let dropDownWidth = this.slider.width * .5-10; // Make slider + dropdown the same width as other sliders.
+    this.slider.style('width', Math.round(this.slider.width * 0.5).toString() + "px");
+    this.oddEvenSel.style('width', Math.round(dropDownWidth/2).toString() + "px");
     this.oddEvenSel.position(x+this.slider.width+10,y);
-    this.slopeSel.style('width', Math.round(dropDownWidth).toString() + "px");
-    this.slopeSel.position(x+this.slider.width+dropDownWidth+10,y);
-    this.textLabel.position(x + 2*dropDownWidth + this.slider.width + 20, y - 15);
-    this.textBox.position(x + this.slider.width + 2*dropDownWidth+ labelWidth+10,y);
-    this.textBox.style('width', Math.round(textboxWidth).toString() + "px");
-    this.button.position(this.textBox.x + this.textBox.width,y);
-    this.button.style('width', Math.round(buttonWidth).toString() + "px");
+    this.slopeSel.style('width', Math.round(dropDownWidth/2).toString() + "px");
+    this.slopeSel.position(x+this.slider.width+dropDownWidth/2+10,y);
   }
-  }
+}
 
 
 class sampleRateSlider extends slider{
   setup(p,settings){
     this.settings = settings;
-    this.name ="Sample Rate(Hz):";
+    this.name ="Sample Rate";
+    this.unit = "Hz";
     this.propName="downsamplingFactor";
     this.min = p.log(3000)/p.log(2);
     this.max =  p.log(48000)/p.log(2);
@@ -141,17 +153,16 @@ class sampleRateSlider extends slider{
     this.makeSlider(p);
   }
   calcDisplayVal(){
-    return this.displayVal= Math.round(this.settings.sampleRate / this.settings.downsamplingFactor , 3);//
-  }
-  calcSliderVal(){
-    return Math.log(this.textBox.value())/Math.log(2);
+    return this.displayVal = Math.round(this.settings.sampleRate / this.settings.downsamplingFactor , 3) + this.displayValSuffix();
   }
 
-  updateValue(p){
-    this.settings.downsamplingFactor = p.round(WEBAUDIO_MAX_SAMPLERATE/p.pow(2, this.slider.value()));
-    this.displayVal = this.calcDisplayVal();
-    this.textBox.value(this.displayVal);//
-    this.textLabel.html(this.name);// + p.round(this.settings.sampleRate / this.settings.downsamplingFactor / 1000, 3) + " kHz")
+  calcSliderVal(){
+    let text = super.calcSliderVal();
+    return Math.log(text)/Math.log(2);
+  }
+
+  propertyValue(){
+    return Math.round(WEBAUDIO_MAX_SAMPLERATE/Math.pow(2, this.slider.value()));
   }
 }
 
@@ -222,17 +233,15 @@ class phaseSlider extends slider{
     this.makeSlider(p);
 }
 
-  calcDisplayVal(){return this.settings[this.propName];}
 }
 class zoomSlider extends slider{
-  calcDisplayVal(){return this.settings[this.propName]*100;}
+  calcDisplayVal() {
+    return this.settings[this.propName]*100 + this.displayValSuffix();
+  }
+
   calcSliderVal(){
-    if (isNaN(this.textBox.value())){
-      return this.slider.value();
-    }
-    else{
-      return this.textBox.value()/100;
-    }
+    let text = super.calcSliderVal();
+    return text/100;
   }
 }
 class ampZoomSlider extends zoomSlider{
@@ -273,11 +282,10 @@ class freqZoomSlider extends zoomSlider{
     this.initial = 1.0;
     this.step = .01;
     this.makeSlider(p);
-}
-updateValue(p){
-  this.settings.freqZoom = this.slider.value();
-  this.settings.maxVisibleFrequency = WEBAUDIO_MAX_SAMPLERATE/2/this.settings.freqZoom;
-  this.textBox.value(this.settings.freqZoom*100);
-  this.textLabel.html('Freq. zoom (%):');
+  }
+
+  updateValue(p){
+    super.updateValue(p);
+    this.settings.maxVisibleFrequency = WEBAUDIO_MAX_SAMPLERATE/2/this.settings.freqZoom;
   }
 }
