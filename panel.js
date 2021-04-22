@@ -99,7 +99,7 @@ class freqPanel extends Panel{
     // endShape();
     endShape(CLOSE);
     stroke(this.stroke); fill(this.fill);
-    // render(); // SVG
+    render(); // SVG
   }
 }
 
