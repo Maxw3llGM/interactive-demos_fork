@@ -62,8 +62,15 @@ p.setup = function () {
   settings.render = renderWaves;
   settings.play = playWave;
 
-  p.createCanvas(p.windowWidth, p.windowHeight);
-  p.textAlign(p.CENTER);
+  //p.createCanvas(p.windowWidth, p.windowHeight);
+  console.log('createSVG');
+  createSVG(p.windowWidth, p.windowHeight);
+  // background('red')
+  stroke(1)
+  //noFill()
+  fill('black');
+  // render(); // SVG
+  // p.textAlign(p.CENTER);
   panels.forEach(panel => panel.setup(p, panelHeight, panelWidth, settings));
   sliders.forEach(slider => slider.setup(p, settings));
   sliders.forEach(slider => slider.updateValue(p));
@@ -79,7 +86,7 @@ p.draw = function() {
   panels.forEach( (panel, index) => {
     let y = p.floor(index / numColumns) * panelHeight;
     let x = p.floor(index % numColumns) * panelWidth;
-    p.image(panel.buffer, x, y);
+    //p.image(panel.buffer, x, y);
   });
 };
 

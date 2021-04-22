@@ -19,6 +19,7 @@ class slider{
     this.updateValue();
     this.settings.render();
     this.settings.p5.draw();
+    render(); // SVG
   }
 
   makeSlider(p){

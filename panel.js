@@ -18,15 +18,22 @@ class Panel {
 
   setup(p, height, width, settings) {
     this.settings = settings;
-    this.buffer = p.createGraphics(1,1);
+    // this.buffer = p.createGraphics(1,1);
     this.resize(height, width);
+    createSVG(height, width);
+    // background('blue')
+    stroke(1)
+    // noFill()
+    fill('black')
+  
+    // render(); // SVG
     this.bufferInit();
-    this.buffer.textFont('Helvetica',20);
-    this.buffer.textAlign(p.CENTER);
+    // textFont('Helvetica',20);
+    // textAlign(p.CENTER);
   }
 
   resize(h, w) {
-    this.buffer.resizeCanvas(w, h);
+    //resizeCanvas(w, h);
     this.xbezel = Math.max(70, w * 0.1);
     this.xbezelLeft  = 0.60 * this.xbezel;
     this.xbezelRight = 0.40 * this.xbezel;
@@ -41,18 +48,19 @@ class Panel {
   }
 
   bufferInit(){
-    this.buffer.background(this.background);
-    this.buffer.fill(this.fill);
-    this.buffer.stroke(this.stroke);
-    this.buffer.strokeWeight(this.strokeWeight);
+    background(this.background);
+    fill(this.fill);
+    stroke(this.stroke);
+    strokeWeight(this.strokeWeight);
   }
 
   drawStem(x,y,startHeight,ellipseSize =this.ellipseSize){
     let actual_y = y;
     y = (y<this.plotTop)? y=this.plotTop : (y>this.plotBottom)? y= this.plotBottom : y;
-    this.buffer.line(x, startHeight, x, y);
+    line(x, startHeight, x, y);
     ellipseSize= (actual_y<this.plotTop || actual_y>this.plotBottom)? 0: ellipseSize;
-    this.buffer.ellipse(x, y, ellipseSize);
+    //ellipse(x, y, ellipseSize);
+    ellipse(x, y, ellipseSize, ellipseSize);
   };
 
   setbackground(backgroundClr){ this.background = backgroundClr; }
@@ -61,11 +69,11 @@ class Panel {
   setFill(fillClr){ this.fill = fillClr; }
 
   drawBorder(){
-    this.buffer.stroke(this.stroke);
-    this.buffer.line(this.plotLeft, this.plotTop, this.plotLeft, this.plotBottom);
-    this.buffer.line(this.plotLeft, this.plotTop, this.plotRight, this.plotTop);
-    this.buffer.line(this.plotRight, this.plotTop, this.plotRight, this.plotBottom);
-    this.buffer.line(this.plotLeft, this.plotBottom, this.plotRight, this.plotBottom);
+    stroke(this.stroke);
+    line(this.plotLeft, this.plotTop, this.plotLeft, this.plotBottom);
+    line(this.plotLeft, this.plotTop, this.plotRight, this.plotTop);
+    line(this.plotRight, this.plotTop, this.plotRight, this.plotBottom);
+    line(this.plotLeft, this.plotBottom, this.plotRight, this.plotBottom);
   }
 
   drawPanel(){}
@@ -77,19 +85,21 @@ class freqPanel extends Panel{
 
   drawPeak(x,height,base,colour="black"){
     height = Math.abs(height);
-    this.buffer.fill(colour);
-    this.buffer.stroke(colour);
-    this.buffer.beginShape();
+    fill(colour);
+    stroke(colour);
+    beginShape();
     if (x<this.plotLeft || x>this.plotRight) return;
     let x1=x-2; let x2 = x+2;
     x1 = Math.max(x1, this.plotLeft);
     x2 = Math.min(x2, this.plotRight);
-    this.buffer.vertex(x1, base);
-    this.buffer.vertex(x, this.plotBottom-height);
-    this.buffer.vertex(x2, base);
-    this.buffer.vertex(x, base);
-    this.buffer.endShape();
-    this.buffer.stroke(this.stroke); this.buffer.fill(this.fill);
+    vertex(x1, base);
+    vertex(x, this.plotBottom-height);
+    vertex(x2, base);
+    vertex(x, base);
+    // endShape();
+    endShape(CLOSE);
+    stroke(this.stroke); fill(this.fill);
+    // render(); // SVG
   }
 }
 
@@ -100,11 +110,11 @@ function linToDB(a, a_0 = 1)
 
 const midline_doc='The horizontal middle line represents an amplitude of zero. ';
 function drawMidLine(panel) {
-  // panel.buffer.drawingContext.setLineDash([5,5]);
-  panel.buffer.stroke("gray");
-  panel.buffer.line(panel.plotLeft, panel.halfh, panel.plotRight, panel.halfh);
-  panel.buffer.stroke(panel.stroke);
-  // panel.buffer.drawingContext.setLineDash([]);
+  // drawingContext.setLineDash([5,5]);
+  stroke("gray");
+  line(panel.plotLeft, panel.halfh, panel.plotRight, panel.halfh);
+  stroke(panel.stroke);
+  // drawingContext.setLineDash([]);
 }
 
 const time_signal_doc='Because this signal approximates a continuous analog signal in our simulation, the signal value is drawn with a simple interpolation scheme. There are currently bugs with this interpolation when zooming in (time zoom > 100%). In addition, visual aliasing may occur when viewing high frequency signals due to the limited number of pixels on the screen acting as a kind of spatial sampling process. This may appear as amplitude modulation in the plot that is not actually present in the signal. Finally, note that the amplitude of the signal is clipped to the size of the panel viewport. This visual clipping happens regardless of whether the signal itself actually exhibits clipping. ';
@@ -112,17 +122,19 @@ function drawSignal(panel, signal, zoom = 1)
 {
   let pixel_max = panel.plotHeight/2;
   let pixel_per_fullscale = pixel_max * panel.settings.ampZoom;
-  panel.buffer.noFill();
+  //noFill();
   //TODO: there are some artifacts here due to the way the signal is drawn, especially when zoomed in and/or large amplitude
-  panel.buffer.beginShape();
-  panel.buffer.curveTightness(1.0);
+  beginShape();
+  // curveTightnessn(1.0);
   for (let x = 0; x < panel.plotWidth; x++) {
     let pixel_amp = pixel_per_fullscale * signal[Math.round(x/panel.settings.timeZoom)];
     let y = panel.halfh - pixel_amp;
-    y = (y<panel.plotTop)? y=panel.plotTop : (y>panel.plotBottom)? y= panel.plotBottom : y=y; panel.buffer.curveTightness(0.0);
-    panel.buffer.curveVertex(x + panel.plotLeft, y);
+    y = (y<panel.plotTop)? y=panel.plotTop : (y>panel.plotBottom)? y= panel.plotBottom : y=y; //curveTightness(0.0);
+    // curveVertex(x + panel.plotLeft, y);
+    vertex(x + panel.plotLeft, y);
   }
-  panel.buffer.endShape();
+  // endShape();
+  endShape(CLOSE);endShape
 }
 
 const lollipop_doc='Because this signal represents the discrete time output of the analog-to-digital conversion process, it is drawn with a lollipop plot where each stem represents a single sample. ';
@@ -137,41 +149,41 @@ function drawDiscreteSignal(panel,signal){
 }
 
 function drawHorizontalTick(panel, text, height, tick_length = 5, side="left") {
-  panel.buffer.fill(panel.fill);
-  panel.buffer.textFont('Helvetica', panel.tickTextSize);
-  panel.buffer.textStyle(panel.buffer.ITALIC);
-  panel.buffer.strokeWeight(0);
-  panel.buffer.textAlign(panel.buffer.RIGHT);
+  fill(panel.fill);
+  // textFont('Helvetica', panel.tickTextSize);
+  // textStyle(ITALIC);
+  strokeWeight(0);
+  // textAlign(RIGHT);
   let tickStart = panel.plotLeft-tick_length;
   let tickEnd = panel.plotLeft;
   if (side == "right"){
-    panel.buffer.textAlign(panel.buffer.LEFT);
+    // textAlign(LEFT);
     tickEnd = panel.plotRight+tick_length;
     tickStart = panel.plotRight;
-    panel.buffer.text(text, tickEnd+2, height - panel.tickTextSize/2, panel.buffer.width , height + panel.tickTextSize/2);
+    //text(text, tickEnd+2, height - panel.tickTextSize/2, width , height + panel.tickTextSize/2);
   }
   else{
-    panel.buffer.text(text, 0, height - panel.tickTextSize/2, tickStart , height + panel.tickTextSize/2);
+    //text(text, 0, height - panel.tickTextSize/2, tickStart , height + panel.tickTextSize/2);
 
   }
 
-  panel.buffer.strokeWeight(panel.strokeWeight);
-  panel.buffer.line(tickStart , height,
+  strokeWeight(panel.strokeWeight);
+  line(tickStart , height,
                     tickEnd,               height);
 }
 
 function drawVerticalTick(panel, text, x, tick_length = 5) {
   if (x<panel.plotLeft || x>panel.plotRight){return};
-  panel.buffer.fill(panel.fill);
-  panel.buffer.textFont('Helvetica', panel.tickTextSize);
-  panel.buffer.textAlign(panel.buffer.CENTER);
-  panel.buffer.textStyle(panel.buffer.ITALIC);
-  panel.buffer.strokeWeight(0);
+  fill(panel.fill);
+  // textFont('Helvetica', panel.tickTextSize);
+  // textAlign(CENTER);
+  // textStyle(ITALIC);
+  strokeWeight(0);
   // we draw the text in the center of an oversized box centered over the tick
   // 20000 pixels should be more than enough for any reasonable tick text
-  panel.buffer.text(text, x - 10000, panel.plotBottom + tick_length, 20000, panel.ybezel - tick_length);
-  panel.buffer.strokeWeight(panel.strokeWeight);
-  panel.buffer.line(x, panel.plotBottom, x, panel.plotBottom + tick_length);
+  //text(text, x - 10000, panel.plotBottom + tick_length, 20000, panel.ybezel - tick_length);
+  strokeWeight(panel.strokeWeight);
+  line(x, panel.plotBottom, x, panel.plotBottom + tick_length);
 }
 
 const amp_ticks_doc='Amplitude is plotted on the y-axis. Ticks on the left label the linear amplitude where +/- 1.0 is equal to the maximum amplitude. ';
@@ -221,10 +233,10 @@ function drawSignalBinaryScaling(panel,pixel_max, num_ticks, settings){
           //draw axis labels in hex because of limited space
           drawHorizontalTick(panel, "0x" + (tick*tickScale).toString(16).padStart(4,"0"), y,5,"left");
         }
-          panel.buffer.stroke("gray");
-          panel.buffer.drawingContext.setLineDash([5,5]);
-          panel.buffer.line(panel.plotLeft, y, panel.plotRight, y);
-          panel.buffer.drawingContext.setLineDash([]);    // drawHorizontalTick(panel, tick.toString(2), y,5,"left");
+          stroke("gray");
+          // drawingContext.setLineDash([5,5]);
+          line(panel.plotLeft, y, panel.plotRight, y);
+          // drawingContext.setLineDash([]);    // drawHorizontalTick(panel, tick.toString(2), y,5,"left");
     }
     val = val + stepSize*tickScale;
   }
@@ -255,14 +267,14 @@ function drawFreqTicks(panel, num_ticks, pixels_per_hz) {
 }
 
 function drawName(panel){
-  panel.buffer.fill(panel.fill);
-  panel.buffer.strokeWeight(0);
-  panel.buffer.textAlign(panel.buffer.CENTER);
-  panel.buffer.textStyle(panel.buffer.NORMAL);
-  panel.buffer.textFont('Helvetica',15);
-  let textheight = panel.buffer.textSize() + panel.buffer.textDescent() + 1;
-  panel.buffer.text (panel.name, panel.plotLeft, panel.plotTop - textheight, panel.plotWidth, panel.ybezel);
-  panel.buffer.strokeWeight(panel.strokeWeight);
+  fill(panel.fill);
+  strokeWeight(0);
+  // textAlign(CENTER);
+  // textStyle(NORMAL);
+  // textFont('Helvetica',15);
+  // let textheight = textSize() + textDescent() + 1;
+  //text (panel.name, panel.plotLeft, panel.plotTop - textheight, panel.plotWidth, panel.ybezel);
+  strokeWeight(panel.strokeWeight);
 }
 
 function getColor(num){
@@ -278,7 +290,7 @@ class inputSigPanel extends Panel {
   }
 
   drawPanel(){
-    this.buffer.background(this.background);
+    background(this.background);
     drawSignal(this, this.settings.original);
     drawMidLine(this);
     drawName(this);
@@ -297,7 +309,7 @@ class reconstructedSigPanel extends Panel {
   }
 
   drawPanel(){
-    this.buffer.background(this.background);
+    background(this.background);
     drawSignal(this, this.settings.reconstructed);
     drawMidLine(this);
     drawName(this);
@@ -317,7 +329,7 @@ class inputSigFreqPanel extends freqPanel {
   }
 
   drawPanel(){
-    this.buffer.background(this.background);
+    background(this.background);
     let pixels_per_hz = this.plotWidth / this.settings.maxVisibleFrequency;
     drawPassBand(this);
     // let harmInc = 1;
@@ -360,20 +372,21 @@ function drawFFT(panel, fft, tick='freq') {
   let num_bins = Math.round(panel.plotWidth / pixels_per_bin);
   let normalize = 4/fft.length;
 
-  panel.buffer.background(panel.background);
-  panel.buffer.stroke(panel.stroke);
+  background(panel.background);
+  stroke(panel.stroke);
   drawPassBand(panel);
-  panel.buffer.beginShape();
-  panel.buffer.vertex(panel.plotLeft, panel.plotBottom);
+  beginShape();
+  vertex(panel.plotLeft, panel.plotBottom);
   for (let bin = 0; bin <= num_bins; bin++) {
     let xpos = pixels_per_bin * bin + panel.plotLeft;
     let ypos = panel.plotBottom - gain * normalize * magnitude(fft[2*bin], fft[2*bin+1]);
-    panel.buffer.vertex(xpos, ypos);
+    vertex(xpos, ypos);
   }
-  panel.buffer.vertex(panel.plotRight, panel.plotBottom);
-  panel.buffer.endShape(panel.buffer.CLOSE);
-  panel.buffer.strokeWeight(panel.strokeWeight);
-  panel.buffer.stroke(panel.stroke);
+  vertex(panel.plotRight, panel.plotBottom);
+  // endShape();
+  endShape(CLOSE);
+  strokeWeight(panel.strokeWeight);
+  stroke(panel.stroke);
   panel.drawBorder();
   drawName(panel);
   if (tick == 'dirac')
@@ -428,7 +441,7 @@ class impulsePanel extends Panel {
   drawPanel(){
     let base = this.plotBottom;
     let ytop = this.plotTop + 10;
-    this.buffer.background(this.background);
+    background(this.background);
     this.drawBorder();
 
     let visibleSamples = Math.floor(this.plotWidth / this.settings.downsamplingFactor/this.settings.timeZoom+1);
@@ -484,7 +497,7 @@ class sampledInputPanel extends Panel{
   }
 
   drawPanel(){
-    this.buffer.background(this.background);
+    background(this.background);
     drawDiscreteSignal(this,this.settings.downsampled)
     drawMidLine(this);
     drawName(this);
@@ -500,13 +513,13 @@ const passband_doc='The frequency range below the nyquist frequency is highlight
 function drawPassBand(panel) {
   let sampleRate = panel.settings.sampleRate/panel.settings.downsamplingFactor;
   let pixels_per_hz = panel.plotWidth / panel.settings.maxVisibleFrequency;
-  panel.buffer.strokeWeight(0);
-  panel.buffer.fill(235);
+  strokeWeight(0);
+  fill(235);
   let passbandcutoff = sampleRate/2;
   let passbandpixelwidth = passbandcutoff * pixels_per_hz;
-  panel.buffer.rect(panel.plotLeft, panel.plotTop, passbandpixelwidth, panel.plotHeight);
-  panel.buffer.strokeWeight(panel.strokeWeight);
-  panel.buffer.fill(panel.fill);
+  rect(panel.plotLeft, panel.plotTop, passbandpixelwidth, panel.plotHeight);
+  strokeWeight(panel.strokeWeight);
+  fill(panel.fill);
 }
 
 function calculateNumImages(settings) {
@@ -531,10 +544,10 @@ function drawDiracDashes(panel) {
     let xpos = imagehz * pixels_per_hz + panel.plotLeft;
 
     // draw the dotted line associated with this dirac comb image
-    panel.buffer.stroke(color);
-    panel.buffer.drawingContext.setLineDash([5,5]);
-    panel.buffer.line(xpos, panel.plotTop, xpos, panel.plotBottom);
-    panel.buffer.drawingContext.setLineDash([]);
+    stroke(color);
+    // drawingContext.setLineDash([5,5]);
+    line(xpos, panel.plotTop, xpos, panel.plotBottom);
+    // drawingContext.setLineDash([]);
 
     // label the dotted line associated with this dirac comb image
     let fstext = imagehz.toFixed(0) + ' Hz';
@@ -551,8 +564,8 @@ class sampledInputFreqPanel extends freqPanel{
   }
 
   drawPanel(){
-    this.buffer.background(this.background);
-    this.buffer.stroke(this.stroke);
+    background(this.background);
+    stroke(this.stroke);
     drawPassBand(this);
     drawDiracDashes(this);
 
@@ -598,7 +611,7 @@ class quantNoisePanel extends Panel{
         + time_ticks_doc + amp_ticks_doc + midline_doc;
   }
   drawPanel(){
-    this.buffer.background(this.background);
+    background(this.background);
     drawDiscreteSignal(this, this.settings.quantNoise);
     drawMidLine(this);
     drawName(this);
@@ -631,9 +644,9 @@ class inputPlusSampledPanel extends Panel {
   }
 
   drawPanel() {
-    this.buffer.background(this.background);
+    background(this.background);
     drawDiscreteSignal(this,this.settings.downsampled)
-    this.buffer.stroke("gray");
+    stroke("gray");
     drawSignal(this, this.settings.original);
     drawMidLine(this);
     drawName(this);
@@ -654,12 +667,12 @@ class allSignalsPanel extends Panel {
   }
 
   drawPanel() {
-    this.buffer.background(this.background);
+    background(this.background);
     drawDiscreteSignal(this,this.settings.downsampled)
     drawSignal(this, this.settings.original);
-    this.buffer.drawingContext.setLineDash([5,5]);
+    // drawingContext.setLineDash([5,5]);
     drawSignal(this, this.settings.reconstructed);
-    this.buffer.drawingContext.setLineDash([]);
+    // drawingContext.setLineDash([]);
     drawMidLine(this);
     drawName(this);
     drawSignalAmplitudeTicks(this, this.plotHeight/2, 4);
