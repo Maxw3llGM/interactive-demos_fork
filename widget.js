@@ -62,7 +62,7 @@ p.setup = function () {
   settings.render = renderWaves;
   settings.play = playWave;
 
-  p.createCanvas(p.windowWidth, p.windowHeight);
+  p.createCanvas(p.windowWidth, p.windowHeight, this.SVG);
   p.textAlign(p.CENTER);
   panels.forEach(panel => panel.setup(p, panelHeight, panelWidth, settings));
   sliders.forEach(slider => slider.setup(p, settings));

@@ -18,7 +18,7 @@ class Panel {
 
   setup(p, height, width, settings) {
     this.settings = settings;
-    this.buffer = p.createGraphics(1,1);
+    this.buffer = p.createGraphics(1,1,this.SVG);
     this.resize(height, width);
     this.bufferInit();
     this.buffer.textFont('Helvetica',20);
