@@ -33,15 +33,19 @@ class slider{
     // this.button.size(200)
     this.button.mousePressed(this.buttonPressed.bind(this));
     this.button.mouseReleased(this.onEdit.bind(this));
+    this.slider.parent(this.settings.element.id);
+    this.button.parent(this.settings.element.id);
+    this.textBox.parent(this.settings.element.id);
+    this.textLabel.parent(this.settings.element.id);
   }
 
   resize(x, y, w, p){
     let width = w - 20;
-    let labelWidth = 250;
+    let labelWidth = 130;
     width -= labelWidth;
     let sliderWidth = width * 0.6;
     width -= sliderWidth;
-    let textboxWidth = width * 0.5;
+    let textboxWidth = width *.5;
     width -= textboxWidth;
     let buttonWidth = width;
 
@@ -88,7 +92,7 @@ class numHarmSlider extends slider{
     this.name ="Number of harmonics";
     this.propName="numHarm"
     this.min = 1;
-    this.max = 20;
+    this.max = 100;
     this.initial = 1;
     this.step = 1;
     this.displayVal = this.initial;
@@ -98,21 +102,23 @@ class numHarmSlider extends slider{
     this.oddEvenSel.option("All");
     this.oddEvenSel.selected(this.settings.harmType);
     this.oddEvenSel.changed(()=>this.settings.harmType = this.oddEvenSel.value());
+    this.oddEvenSel.parent(this.settings.element.id);
 
     this.slopeSel = p.createSelect();
     this.slopeSel.option("1/x");
     this.slopeSel.option("1/x2");
     this.slopeSel.option("lin");
     this.slopeSel.option("flat");
+    this.slopeSel.option("log");
     this.slopeSel.selected(this.settings.harmSlope);
     this.slopeSel.changed(()=>this.settings.harmSlope = this.slopeSel.value());
-
+    this.slopeSel.parent(this.settings.element.id);
     this.makeSlider(p);
   }
   resize(x, y, w, p){
 
     let width = w - 20;
-    let labelWidth = 250;
+    let labelWidth = 170;
     width -= labelWidth;
     let sliderWidth = width * 0.5; // slider + dropdowns
     width -= sliderWidth;

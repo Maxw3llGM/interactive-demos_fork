@@ -116,6 +116,8 @@ function renderWavesImpl(settings, fft, p) { return (playback = false) => {
       else if (settings.harmSlope == "1/x") harmonic_amplitude = 1/harmonic_number;
       else if (settings.harmSlope == "1/x2") harmonic_amplitude = 1/harmonic_number/harmonic_number;
       else if (settings.harmSlope == "flat") harmonic_amplitude = 1;
+      else if (settings.harmSlope == "log") {harmonic_amplitude = Math.exp(-0.1*(harmonic_number-1));
+      console.log(harmonic_amplitude)}
   
       // In case the harmonic slope is 1/x^2 and the harmonic type is "odd",
       // by inverting every other harmonic we generate a nice triangle wave.

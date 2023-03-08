@@ -266,7 +266,7 @@ function drawName(panel){
   panel.buffer.strokeWeight(0);
   panel.buffer.textAlign(panel.buffer.CENTER);
   panel.buffer.textStyle(panel.buffer.NORMAL);
-  panel.buffer.textFont('Helvetica',15);
+  panel.buffer.textFont('Helvetica',12);
   let textheight = panel.buffer.textSize() + panel.buffer.textDescent() + 1;
   panel.buffer.text (panel.name, panel.plotLeft, panel.plotTop - textheight, panel.plotWidth, panel.ybezel);
   panel.buffer.strokeWeight(panel.strokeWeight);
@@ -333,7 +333,7 @@ class inputSigFreqPanel extends freqPanel {
     let harm =1;
     while (harm<=this.settings.numHarm){
       let hz = this.settings.harmonicFreqs[harm-1];
-      let xpos = hz * pixels_per_hz + this.plotLeft;
+      let xpos = (hz * pixels_per_hz + this.plotLeft);
       if (xpos > this.plotRight|| xpos< this.plotLeft) break;
       // if (this.settings.harmSlope == "lin") {ampScale = 1 - (harm-1)/(this.settings.numHarm)};
       // if (this.settings.harmSlope == "1/x") {ampScale = 1/harmPeak};
@@ -650,6 +650,26 @@ class inputPlusSampledPanel extends Panel {
     drawName(this);
     drawSignalAmplitudeTicks(this, this.plotHeight/2, 4);
     drawSignalBinaryScaling(this, this.plotHeight/2, 16,this.settings);
+    drawTimeTicks(this, this.numTimeTicks/this.settings.timeZoom, 1/(this.settings.timeZoom*this.settings.sampleRate));
+    this.drawBorder();
+  }
+}
+class inputPlusSampledPanel_no_binary extends Panel {
+  constructor() {
+    super();
+    this.name = "Input with Sampled Signal Time Domain";
+    this.description = 'This plot shows the input signal with the sampled signal overlayed on top. See the documentation for the input signal time domain and sampled signal time domain for more information. ';
+    this.ellipseSize = 5;
+  }
+
+  drawPanel() {
+    this.buffer.background(this.background);
+    drawDiscreteSignal(this,this.settings.downsampled)
+    this.buffer.stroke("gray");
+    drawSignal(this, this.settings.original);
+    drawMidLine(this);
+    drawName(this);
+    drawSignalAmplitudeTicks(this, this.plotHeight/2, 4);
     drawTimeTicks(this, this.numTimeTicks/this.settings.timeZoom, 1/(this.settings.timeZoom*this.settings.sampleRate));
     this.drawBorder();
   }

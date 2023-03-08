@@ -1,11 +1,18 @@
 const BIT_DEPTH_MAX = 16;
-const WEBAUDIO_MAX_SAMPLERATE = 96000;
+const WEBAUDIO_MAX_SAMPLERATE = 96000;  
 const NUM_COLUMNS = 2;
-const MAX_HARMONICS = 20;
-function new_widget(panels, sliders) { const sketch = p => {
+const MAX_HARMONICS = 100;
+function new_widget(panels, sliders, elem_id, margin_size, width_factor=1.0, height_factor=1.0) { const sketch = p => {
 
+var element = undefined;
+if (elem_id) {
+   element = document.getElementById(elem_id);
+   console.log(element.id);
+}
+  
 var numPanels = panels.length;
 var numSliders = sliders.length;
+var old_x = 220;
 let panelHeight, panelWidth, sliderWidth, sliderHeight, numColumns;
 resize(1080, 1920);
 
@@ -47,7 +54,8 @@ var settings =
     , freqZoom : 1.0 //X axis zoom for frequency panels
     , ampZoom : 1.0 // Y axis zoom for all panels
     , timeZoom: 1.0 // X axis zoom for signal panels
-
+    , element : element
+    , margine_size : margin_size+20
     , p5: undefined
     , render : undefined
     , play : undefined
@@ -63,6 +71,7 @@ p.setup = function () {
   settings.play = playWave;
 
   p.createCanvas(p.windowWidth, p.windowHeight);
+  console.log(p.windowWidth,p.windowHeight)
   p.textAlign(p.CENTER);
   panels.forEach(panel => panel.setup(p, panelHeight, panelWidth, settings));
   sliders.forEach(slider => slider.setup(p, settings));
@@ -84,35 +93,41 @@ p.draw = function() {
 };
 
 p.windowResized = function() {
-  let w = p.windowWidth - 20; // TODO: get panel bezel somehow instead of hardcoded 20
-  let h = p.windowHeight - 20;
+  console.log(p.windowWidth,p.windowHeight)
+  let w = width_factor * p.windowWidth - 20; // TODO: get panel bezel somehow instead of hardcoded 20
+  let h = height_factor * p.windowHeight - 20;
   resize(w, h);
+  
   p.resizeCanvas(w, h);
   panels.forEach(panel => panel.resize(panelHeight, panelWidth));
 
-  let yoffset = panelHeight * p.ceil(numPanels/numColumns) + 20;
+  let yoffset = panelHeight * p.ceil(numPanels/numColumns) + 100;
+  let sliderPos = new Array(numColumns).fill(1);
+  sliderPos.forEach((pos,index)=>{
+    sliderPos[index] = 220+index*sliderWidth;
+  });
+  console.log("slider position", sliderPos);
   sliders.forEach( (slider, index) => {
     let y = yoffset + p.floor(index / numColumns) * sliderHeight;
-    let x = p.floor(index % numColumns) * panelWidth;
-    slider.resize(x + 20, y, sliderWidth,p);
+    //let x = p.floor(index % numColumns) * panelWidth;
+    slider.resize(sliderPos[index % numColumns], y, sliderWidth,p);
   });
-
   let y = yoffset + p.floor((numSliders)/ numColumns) * sliderHeight;
-  let x = p.floor((numSliders) % numColumns) * panelWidth;
+  let x = margin_size;
   originalButton.position(x + 20, y);
   reconstructedButton.position(originalButton.x + originalButton.width * 1.1, originalButton.y);
   quantNoiseButton.position(reconstructedButton.x + reconstructedButton.width * 1.1, reconstructedButton.y);
 };
 
 function resize(w, h) {
-  if (w < 800) numColumns = 1;
+  if (w < 800 || (numPanels % 2 == 1)) numColumns = 1;
   else numColumns = 2;
   let panelRows = Math.ceil((numPanels+1)/numColumns);
   let sliderRows = Math.ceil((numSliders+1)/numColumns);
   panelWidth   = w / numColumns;
-  sliderWidth  = w / numColumns;
+  sliderWidth  = w / numColumns - 200;
   panelHeight  = h / panelRows;
-  sliderHeight = panelHeight / sliderRows;
+  sliderHeight = 200 / sliderRows;
   if (sliderHeight < 30) { // keep sliders from getting squished
     sliderHeight = 30;
     let sliderPanelHeight = sliderHeight * sliderRows;
@@ -129,6 +144,7 @@ function buttonSetup() {
     if (!settings.snd) settings.snd = new (window.AudioContext || window.webkitAudioContext)();
     playWave(settings.original_pb, WEBAUDIO_MAX_SAMPLERATE, settings.snd);
   });
+  originalButton.parent(element.id);
 
   reconstructedButton = p.createButton("play reconstructed");
   reconstructedButton.position(originalButton.x + originalButton.width * 1.1, originalButton.y);
@@ -137,6 +153,8 @@ function buttonSetup() {
     if (!settings.snd) settings.snd = new (window.AudioContext || window.webkitAudioContext)();
     playWave(settings.reconstructed_pb, WEBAUDIO_MAX_SAMPLERATE, settings.snd);
   });
+  reconstructedButton.parent(element.id);
+
   quantNoiseButton = p.createButton("play quantization noise");
   quantNoiseButton.position(reconstructedButton.x + reconstructedButton.width * 1.1, reconstructedButton.y);
   quantNoiseButton.mousePressed( () => {
@@ -144,6 +162,7 @@ function buttonSetup() {
     if (!settings.snd) settings.snd = new (window.AudioContext || window.webkitAudioContext)();
     playWave(settings.quantNoise_pb, WEBAUDIO_MAX_SAMPLERATE, settings.snd);
   });
+  quantNoiseButton.parent(element.id);
 }
 
 function playWave(wave, sampleRate, audioctx) {

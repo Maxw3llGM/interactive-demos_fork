@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
   <head>
     <link rel="stylesheet" type="text/css" href="../styles.css" media="screen" />
@@ -13,41 +14,48 @@
     <script src="../fft.js"></script>
     <script src="../waves.js"></script>
     <script src="../widget.js"></script>
+    <script src="../nav_tools.js"></script>
   </head>
   <body>
-    <div id="Question">
-
-    <main>
-      <script>
-        const widget = new_widget(
+    <center>
+    <div class="tab">
+      <a href="tut3.html" class="button_round">&laquo; Prev</a>
+      <a href="#" class="button_round">Home </a>
+      <a href="tut5.html" class="button_round">Next &raquo;</a>
+    </div>
+    <div class="tab">
+      <button class="button_round" onclick="samplingSection(event, 'Question')">Question</button>
+      <button class="button_round" onclick="samplingSection(event, 'Answer')">Answer</button>
+    </div>
+  </center>
+    <div id="Question" class="tabcontent">
+      <main>
+        <script>
+          const widget = new_widget(
                 [ new inputSigPanel()
-                , new inputSigFFTPanel()
-                , new inputPlusSampledPanel()
-                , new sampledInputFFTPanel()
-                , new quantNoisePanel()
-                , new quantNoiseFFTPanel()
+                , new inputPlusSampledPanel_no_binary()
+                , new reconstructedSigPanel()
                 ],
                 [ new freqSlider()
                 , new numHarmSlider()
                 , new sampleRateSlider()
-                , new antialiasingSlider()
-                , new ditherSlider()
-                , new bitDepthSlider()
-                , new amplitudeSlider()
                 , new phaseSlider()
-                , new ampZoomSlider()
-                , new freqZoomSlider()
                 , new timeZoomSlider()
-                ], "Question"
+                ]
+                ,"Question"
         );
-      </script>
-      <br>
+        </script>
+        <br>
     </main>
+    </div>
+    <div id="Answer" class="tabcontent">
+      
     </div>
     <footer>
       <div>Digital Audio Workbench, by Josh Rohs, Travis J. West & Marcelo M. Wanderley </div>
       <div>with contributions by Eduardo Meneses, Christian Frisson, and Erivan Duarte</div>
       <div>Copyright <a href="//www-new.idmil.org/">IDMIL</a>/McGill University, 2020 </div>
     </footer>
+
   </body>
 </html>
