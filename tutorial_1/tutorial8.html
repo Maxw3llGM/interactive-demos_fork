@@ -20,9 +20,9 @@
     <div id="page-container">
     <center>
     <div  class="tab">
-      <a href="#" class="button_round">&laquo; Prev</a>
+      <a href="tutorial7.html" class="button_round">&laquo; Prev</a>
       <a href="../index.html" class="button_round">Home </a>
-      <a href="tutorial2.html" class="button_round">Next &raquo;</a>
+      <a href="#" class="button_round">Next &raquo;</a>
     </div>
     <div  class="tab">
       
@@ -34,30 +34,39 @@
     </center>
     <div id = "content-wrap" class="title">
       <H1>
-        Tutorial 1: Waveform building
+        Tutorial 1: 
       </H1>
       <hr> 
     </div>
     <div id="Question" class="tabcontent">
-      
       </p>
       <main>
         <script>
-          const widgetset = new_widget(
+          const widget = new_widget(
                   [ new inputSigPanel()
-                  , new inputSigFreqPanel()
+                  , new inputSigFFTPanel()
+                  , new inputPlusSampledPanel()
+                  , new sampledInputFFTPanel()
+                  , new quantNoisePanel()
+                  , new quantNoiseFFTPanel()
                   ],
                   [ new freqSlider()
                   , new numHarmSlider()
                   , new sampleRateSlider()
-                  , new timeZoomSlider()
+                  , new antialiasingSlider()
+                  , new ditherSlider()
+                  , new bitDepthSlider()
+                  , new amplitudeSlider()
+                  , new phaseSlider()
+                  , new ampZoomSlider()
                   , new freqZoomSlider()
+                  , new timeZoomSlider()
                   ]
                   , ["original"]
-                  ,"Question"
+                  , "Question"
                   , 200
-                  )
-        </script>
+          );
+          </script>
         <br>
     </main>
     </div>

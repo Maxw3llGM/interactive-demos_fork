@@ -13,7 +13,7 @@
     <script src="../slider.js"></script>
     <script src="../fft.js"></script>
     <script src="../waves.js"></script>
-    <script src="../widget.js"></script>
+    <script src="../widget2.js"></script>
     <script src="../nav_tools.js"></script>
   </head>
   <body>
@@ -44,15 +44,15 @@
       <main>
         <script>
           const widgetset = new_widget(
-                  [ new inputSigPanel()
-                  , new inputSigFreqPanel()
+                  [ [new inputSigPanel()]
+                  , [new inputSigFreqPanel()]
                   ],
-                  [ new freqSlider()
-                  , new numHarmSlider()
-                  , new sampleRateSlider()
-                  , new timeZoomSlider()
-                  , new freqZoomSlider()
-                  ]
+                  [ [new freqSlider()
+                  , new numHarmSlider()]
+                  , [new sampleRateSlider()
+                  , new timeZoomSlider()]
+                  , [new freqZoomSlider()
+                  ]]
                   , ["original"]
                   ,"Question"
                   , 200

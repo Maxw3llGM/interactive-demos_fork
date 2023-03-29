@@ -2,7 +2,7 @@ const BIT_DEPTH_MAX = 16;
 const WEBAUDIO_MAX_SAMPLERATE = 96000;  
 const NUM_COLUMNS = 2;
 const MAX_HARMONICS = 100;
-function new_widget(panels, sliders, buttons, elem_id, margin_size, width_factor=1.0, height_factor=1.0) { const sketch = p => {
+function new_widget(panels_set, sliders_set, buttons, elem_id, margin_size, width_factor=1.0, height_factor=1.0) { const sketch = p => {
 
 var element = undefined;
 if (elem_id) {
@@ -11,7 +11,37 @@ if (elem_id) {
    console.log(element.clientHeight, element.clientWidth);
 
 }
-  
+panels = [];
+
+panels_set.forEach((row,index) => {
+  row.forEach((panel, jndex) => {
+    panels.push(panel);
+  })
+});
+sliders = [];
+sliders_set.forEach((row,index) => {
+  row.forEach((slider, jndex) => {
+    sliders.push(slider);
+  })
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 var numPanels = panels.length;
 var numSliders = sliders.length;
 var old_x = 220;

@@ -17,16 +17,30 @@
     <script src="../nav_tools.js"></script>
   </head>
   <body>
-    <div class="tab">
-      <a href="tut4.html" class="previous">&laquo; Prev</a>
-      <a href="#" class="home">Home </a>
-      <a href="tut6.html" class="next">Next &raquo;</a>
+    <div id="page-container">
+    <center>
+    <div  class="tab">
+      <a href="tutorial4.html" class="button_round">&laquo; Prev</a>
+      <a href="../index.html" class="button_round">Home </a>
+      <a href="tutorial6.html" class="button_round">Next &raquo;</a>
     </div>
-    <div class="tab">
-      <button class="tablinks" onclick="samplingSection(event, 'Question')">Question</button>
-      <button class="tablinks" onclick="samplingSection(event, 'Answer')">Answer</button>
+    <div  class="tab">
+      
+        <button class="button_round" onclick="samplingSection(event, 'Question')">Question</button>
+        <button class="button_round" onclick="samplingSection(event, 'Answer')">Answer</button>
+      
+      
+    </div>
+    </center>
+    <div id = "content-wrap" class="title">
+      <H1>
+        Tutorial 1: 
+      </H1>
+      <hr> 
     </div>
     <div id="Question" class="tabcontent">
+      
+      </p>
       <main>
         <script>
           const widget = new_widget(
@@ -47,20 +61,24 @@
                 , new freqZoomSlider()
                 , new timeZoomSlider()
                 ]
-                ,"Question"
+                , ["original"]
+                , "Question"
+                , 200
         );
         </script>
         <br>
     </main>
     </div>
     <div id="Answer" class="tabcontent">
-      
     </div>
-    <footer>
-      <div>Digital Audio Workbench, by Josh Rohs, Travis J. West & Marcelo M. Wanderley </div>
-      <div>with contributions by Eduardo Meneses, Christian Frisson, and Erivan Duarte</div>
-      <div>Copyright <a href="//www-new.idmil.org/">IDMIL</a>/McGill University, 2020 </div>
-    </footer>
+    <div>
+      <footer id="footer">
+        <div>Digital Audio Workbench, by Josh Rohs, Travis J. West & Marcelo M. Wanderley </div>
+        <div>with contributions by Eduardo Meneses, Christian Frisson, and Erivan Duarte</div>
+        <div>Copyright <a href="//www-new.idmil.org/">IDMIL</a>/McGill University, 2020 </div>
+      </footer>
+    </div>
+  </div>
 
   </body>
 </html>

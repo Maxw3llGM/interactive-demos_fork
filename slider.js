@@ -41,11 +41,11 @@ class slider{
 
   resize(x, y, w, p){
     let width = w - 20;
-    let labelWidth = 130;
+    let labelWidth = 140;
     width -= labelWidth;
     let sliderWidth = width * 0.6;
     width -= sliderWidth;
-    let textboxWidth = width *.5;
+    let textboxWidth = width *.4;
     width -= textboxWidth;
     let buttonWidth = width;
 
