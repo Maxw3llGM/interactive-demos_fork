@@ -25,23 +25,6 @@ sliders_set.forEach((row,index) => {
   })
 });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 var numPanels = panels.length;
 var numSliders = sliders.length;
 var old_x = 220;

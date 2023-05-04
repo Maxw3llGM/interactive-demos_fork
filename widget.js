@@ -2,7 +2,7 @@ const BIT_DEPTH_MAX = 16;
 const WEBAUDIO_MAX_SAMPLERATE = 96000;  
 const NUM_COLUMNS = 2;
 const MAX_HARMONICS = 100;
-function new_widget(panels, sliders, buttons, elem_id, margin_size, width_factor=1.0, height_factor=1.0) { const sketch = p => {
+function new_widget(panels, sliders, buttons, elem_id, elem_id2, margin_size, width_factor=1.0, height_factor=1.0) { const sketch = p => {
 
 var element = undefined;
 if (elem_id) {
@@ -11,7 +11,8 @@ if (elem_id) {
    console.log(element.clientHeight, element.clientWidth);
 
 }
-  
+var intro_text = document.getElementById(elem_id2);
+var intro_height = 0;
 var numPanels = panels.length;
 var numSliders = sliders.length;
 var old_x = 220;
@@ -103,7 +104,11 @@ p.windowResized = function() {
   p.resizeCanvas(w, h);
   panels.forEach(panel => panel.resize(panelHeight, panelWidth));
 
-  let yoffset = panelHeight * p.ceil(numPanels/numColumns) + 150;
+  if (intro_text != null){
+    intro_height = intro_text.clientHeight;
+    console.log(intro_height);
+  }
+  let yoffset = panelHeight * p.ceil(numPanels/numColumns) + 150 + intro_height ;
   let sliderPos = new Array(numColumns).fill(1);
   sliderPos.forEach((pos,index)=>{
     sliderPos[index] = 220+index*sliderWidth;

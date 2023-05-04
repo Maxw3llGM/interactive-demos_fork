@@ -294,3 +294,21 @@ updateValue(p){
   this.textLabel.html('Freq. zoom (%):');
   }
 }
+
+class freqZoomSlider_tutorial_1 extends zoomSlider{
+  setup(p,settings){
+    this.settings = settings;
+    this.propName ="freqZoom";
+    this.min = 1.0;
+    this.max =  3;
+    this.initial = 2.0;
+    this.step = .01;
+    this.makeSlider(p);
+}
+updateValue(p){
+  this.settings.freqZoom = this.slider.value();
+  this.settings.maxVisibleFrequency = WEBAUDIO_MAX_SAMPLERATE/2/this.settings.freqZoom;
+  this.textBox.value(this.settings.freqZoom*100);
+  this.textLabel.html('Freq. zoom (%):');
+  }
+}

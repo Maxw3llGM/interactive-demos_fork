@@ -1,5 +1,7 @@
 body {
   font-family: Cantarell, sans-serif;
+  line-height: 1.5;
+
 }
 
 canvas {
@@ -28,8 +30,12 @@ footer{
 .tabcontent {
   margin-left: 200px;
   margin-right: 200px;
+  display: none;
 }
 .title{
+  margin-left: 100px;
+}
+.intro_text{
   margin-left: 100px;
 }
 .button {
@@ -62,6 +68,9 @@ footer{
 .button_round:hover{
   background-color: #ddd;
   color: black;
+}
+.button_round.active {
+  background-color: #ddd;
 }
 
 .next:hover {
@@ -99,7 +108,9 @@ footer{
 #content-wrap {
   padding-bottom: 2.5rem;    /* Footer height */
 }
-
+#content-wrap2 {
+  padding-bottom: 2.5rem;    /* Footer height */
+}
 #footer {
   position: absolute;
   bottom: 0;
@@ -108,8 +119,10 @@ footer{
   
 }
 #Question{
+  padding-top: 2.5rem;
   padding-bottom: 2.5rem; 
 }
 #Answer{
   padding-bottom: 2.5rem;
+  margin-left: 100px;
 }
