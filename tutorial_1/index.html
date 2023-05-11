@@ -33,13 +33,13 @@
     </div>
     
     </center>
-    <div id = "content-wrap" class="title">
+    <div id = "content-wrap" class="title qs">
       <H1>
         Tutorial 1: Waveform building
       </H1>
       <hr> 
     </div>
-    <div id = "content-wrap2" class="intro_text">
+    <div id = "content-wrap2" class="intro_text qs">
       <p>
         In the left panel, you can see a sine wave with frequency 440 Hz. 
         Click on the Play Original button at the bottom left to hear how it sounds. 
@@ -49,29 +49,32 @@
         Remember that a sine (or a cosine) wave has only one frequency component, 
         in other words, it represents a <u>simple harmonic motion</u> such as the motion of an ideal pendulum or a tuning fork. 
       </p>
-      <ol>
-        <li>
-          Now use the top right slider. 
-          With the parameters loaded with the application 
-          (Odd harmonics, 1/x amplitude), 
-          add 10 components (harmonics) to the original sine wave. 
-          You can get the same effect by typing 10 in the top right
-          box and pressing the Update button. Describe what happens
-          in the left panel.
-        </li>
-        <li>
-          If you add more components (say, 20), what do you see happening in the left panel? 
-        </li>
-        <li>
-          Now, using 20 harmonics, change the amplitude values to 1/x2. What do you see?
-        </li>
-        <li>
-          If you now go back to 1/x, but change Odd to All, and press Update. What happens? Remember that now your highest frequency will be half of the one with only Odd harmonics. 
-          To get a similar maximum frequency value you’ll need to add 40 harmonics in this case.
-        </li>
-      </ol>
+      
     </div>
     <div id="Question" class="tabcontent">
+      <div class="qs">
+        <ol>
+          <li>
+            Now use the top right slider. 
+            With the parameters loaded with the application 
+            (Odd harmonics, 1/x amplitude), 
+            add 10 components (harmonics) to the original sine wave. 
+            You can get the same effect by typing 10 in the top right
+            box and pressing the Update button. Describe what happens
+            in the left panel.
+          </li>
+          <li>
+            If you add more components (say, 20), what do you see happening in the left panel? 
+          </li>
+          <li>
+            Now, using 20 harmonics, change the amplitude values to 1/x2. What do you see?
+          </li>
+          <li>
+            If you now go back to 1/x, but change Odd to All, and press Update. What happens? Remember that now your highest frequency will be half of the one with only Odd harmonics. 
+            To get a similar maximum frequency value you’ll need to add 40 harmonics in this case.
+          </li>
+        </ol>
+      </div>
       
       <main>
         <script>
@@ -86,7 +89,7 @@
                   ]
                   , ["original"]
                   ,"Question"
-                  ,"content-wrap2"
+                  ,"qs"
                   , 200
                   )
         </script>

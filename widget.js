@@ -11,7 +11,11 @@ if (elem_id) {
    console.log(element.clientHeight, element.clientWidth);
 
 }
-var intro_text = document.getElementById(elem_id2);
+document.get
+var intro_text = document.getElementsByClassName(elem_id2);
+console.log(intro_text);
+
+
 var intro_height = 0;
 var numPanels = panels.length;
 var numSliders = sliders.length;
@@ -81,7 +85,7 @@ p.setup = function () {
   sliders.forEach(slider => slider.updateValue(p));
   renderWaves();
   buttonSetup();
-  p.windowResized();
+  windowResized_intial();
   p.noLoop();
   setTimeout(p.draw, 250);
 };
@@ -104,11 +108,11 @@ p.windowResized = function() {
   p.resizeCanvas(w, h);
   panels.forEach(panel => panel.resize(panelHeight, panelWidth));
 
-  if (intro_text != null){
-    intro_height = intro_text.clientHeight;
-    console.log(intro_height);
-  }
-  let yoffset = panelHeight * p.ceil(numPanels/numColumns) + 150 + intro_height ;
+  intro_text.forEach(element => {
+    intro_height += element.clientHeight;
+  })
+
+  let yoffset = panelHeight * p.ceil(numPanels/numColumns) + 150 + intro_height;
   let sliderPos = new Array(numColumns).fill(1);
   sliderPos.forEach((pos,index)=>{
     sliderPos[index] = 220+index*sliderWidth;
@@ -125,6 +129,39 @@ p.windowResized = function() {
   originalButton.position(x + 20, y + sliderHeight);
   reconstructedButton.position(originalButton.x + originalButton.width * 1.1, originalButton.y);
   quantNoiseButton.position(reconstructedButton.x + reconstructedButton.width * 1.1, reconstructedButton.y);
+  intro_height = 0;
+};
+windowResized_intial = function() {
+  console.log(p.windowWidth,p.windowHeight)
+  let w = width_factor * p.windowWidth - 20; // TODO: get panel bezel somehow instead of hardcoded 20
+  let h = height_factor * p.windowHeight - 20;
+  resize(w, h);
+  
+  p.resizeCanvas(w, h);
+  panels.forEach(panel => panel.resize(panelHeight, panelWidth));
+
+  intro_text.forEach(element => {
+    intro_height += element.clientHeight;
+  })
+
+  let yoffset = panelHeight * p.ceil(numPanels/numColumns) + 50 + 500;
+  let sliderPos = new Array(numColumns).fill(1);
+  sliderPos.forEach((pos,index)=>{
+    sliderPos[index] = 220+index*sliderWidth;
+  });
+ 
+  console.log("slider position", sliderPos);
+  sliders.forEach( (slider, index) => {
+    let y = yoffset + p.floor(index / numColumns) * sliderHeight;
+    //let x = p.floor(index % numColumns) * panelWidth;
+    slider.resize(sliderPos[index % numColumns], y, sliderWidth,p);
+  });
+  let y = yoffset + p.floor((numSliders)/ numColumns) * sliderHeight;
+  let x = margin_size;
+  originalButton.position(x + 20, y + sliderHeight);
+  reconstructedButton.position(originalButton.x + originalButton.width * 1.1, originalButton.y);
+  quantNoiseButton.position(reconstructedButton.x + reconstructedButton.width * 1.1, reconstructedButton.y);
+  intro_height = 0;
 };
 
 function resize(w, h) {
