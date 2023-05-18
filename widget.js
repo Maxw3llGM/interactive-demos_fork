@@ -11,8 +11,9 @@ if (elem_id) {
    console.log(element.clientHeight, element.clientWidth);
 
 }
-var intro_text = document.getElementById(elem_id2);
+var intro_text = document.getElementsByClassName(elem_id2);
 var intro_height = 0;
+
 var numPanels = panels.length;
 var numSliders = sliders.length;
 var old_x = 220;
@@ -104,14 +105,13 @@ p.windowResized = function() {
   p.resizeCanvas(w, h);
   panels.forEach(panel => panel.resize(panelHeight, panelWidth));
 
-  if (intro_text != null){
-    intro_height = intro_text.clientHeight;
-    console.log(intro_height);
-  }
-  let yoffset = panelHeight * p.ceil(numPanels/numColumns) + 150 + intro_height ;
+  intro_text.forEach(element => {
+    intro_height += element.clientHeight;
+  })
+  let yoffset = panelHeight * p.ceil(numPanels/numColumns) + intro_height + 100;
   let sliderPos = new Array(numColumns).fill(1);
   sliderPos.forEach((pos,index)=>{
-    sliderPos[index] = 220+index*sliderWidth;
+    sliderPos[index] = 150+index*sliderWidth;
   });
  
   console.log("slider position", sliderPos);
@@ -122,9 +122,10 @@ p.windowResized = function() {
   });
   let y = yoffset + p.floor((numSliders)/ numColumns) * sliderHeight;
   let x = margin_size;
-  originalButton.position(x + 20, y + sliderHeight);
+  originalButton.position(x + 20, y);
   reconstructedButton.position(originalButton.x + originalButton.width * 1.1, originalButton.y);
   quantNoiseButton.position(reconstructedButton.x + reconstructedButton.width * 1.1, reconstructedButton.y);
+  intro_height = 0;
 };
 
 function resize(w, h) {

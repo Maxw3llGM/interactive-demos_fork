@@ -20,7 +20,28 @@ footer{
   color: grey;
   text-align: center;
 }
-
+.tab_questions {
+  overflow: hidden;
+  border: 1px solid #ccc;
+  background-color: #f1f1f1;
+}
+.tab_questions button {
+  background-color: inherit;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  transition: 0.3s;
+  font-size: 17px;
+}
+.tab_questions_content {
+  
+  display: none;  
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  border-top: none;
+}
 
 .previous:hover {
   background-color: #ddd;
@@ -28,7 +49,7 @@ footer{
 }
 
 .tabcontent {
-  margin-left: 200px;
+  margin-left: 120px;
   margin-right: 200px;
   display: none;
 }
@@ -119,7 +140,6 @@ footer{
   
 }
 #Question{
-  padding-top: 2.5rem;
   padding-bottom: 2.5rem; 
 }
 #Answer{

@@ -10,4 +10,6 @@ function samplingSection(evt, sectiontype) {
     }
     document.getElementById(sectiontype).style.display = "block";
     evt.currentTarget.className += " active";
+    
   }
+  document.getElementById("defaultOpen").click();
